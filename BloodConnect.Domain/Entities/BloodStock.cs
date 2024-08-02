@@ -9,15 +9,19 @@ namespace BloodConnect.Domain.Entities
 {
     public class BloodStock : BaseEntity
     {
-        public BloodStock(BloodType bloodType, RhFactor rhFactor, int quantityMl)
+        public BloodStock(BloodType bloodType, RhFactor rhFactor)
         {
             BloodType = bloodType;
             RhFactor = rhFactor;
-            QuantityMl = quantityMl;
         }
 
         public BloodType BloodType { get; private set; }
         public RhFactor RhFactor { get; private set; }
         public int QuantityMl { get; private set; }
+
+        public void AddMl(int quantityMl)
+        {
+            QuantityMl = QuantityMl + quantityMl;
+        }
     }
 }
