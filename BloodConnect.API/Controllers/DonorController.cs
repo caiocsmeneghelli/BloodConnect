@@ -41,7 +41,7 @@ namespace BloodConnect.API.Controllers
         public async Task<IActionResult> Create(CreateDonorCommand command)
         {
             int idDonor = await _mediatr.Send(command);
-            if(idDonor == 0) { BadRequest(); }
+            if(idDonor == 0) { BadRequest("Doador não encontrado."); }
 
             return Ok(idDonor);
         }

@@ -1,4 +1,5 @@
-﻿using BloodConnect.Domain.Entities;
+﻿using BloodConnect.Application.Validation;
+using BloodConnect.Domain.Entities;
 using BloodConnect.Domain.Repositories;
 using MediatR;
 using System;
@@ -26,7 +27,15 @@ namespace BloodConnect.Application.Commands.CreateDonation
 
         public async Task<int> Handle(CreateDonationCommand request, CancellationToken cancellationToken)
         {
-            // add validation
+            var validator = new CreateDonationCommandValidator();
+            var validatorResult = validator.Validate(request);
+            if (!validatorResult.IsValid)
+            {
+                List<string> errors = validatorResult.Errors.Select(reg => reg.ErrorMessage).ToList();
+                throw new Exception(errors.ToString());
+            }
+
+
             Donor? donor = await _donorRepository.GetAsync(request.IdDonor);
             BloodStock? bloodStock = await _bloodStockRepository
                 .GetByTypeAndRhFactorAsync(donor.BloodType, donor.RhFactor);
