@@ -25,7 +25,7 @@ namespace BloodConnect.Application.Validation
             When(reg => !string.IsNullOrWhiteSpace(reg.Email), () =>
             {
                 RuleFor(reg => reg.Email)
-                    .Must(ValidateEmail)
+                    .EmailAddress()
                     .WithMessage("E-mail informado não válido.");
             });
 
@@ -50,8 +50,8 @@ namespace BloodConnect.Application.Validation
             });
 
             RuleFor(reg => reg.Weight)
-                .NotEmpty()
-                .WithMessage("O campo Peso não pode ser vazio.");
+                .GreaterThanOrEqualTo(50)
+                .WithMessage("O peso deve ser de no mínimo 50 kilos.");
 
             RuleFor(reg => reg.BloodType)
                 .NotEmpty()
