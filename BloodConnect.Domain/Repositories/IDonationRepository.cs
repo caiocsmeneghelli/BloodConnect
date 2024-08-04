@@ -11,6 +11,7 @@ namespace BloodConnect.Domain.Repositories
     {
         Task<Donation?> GetByIdAsync(int idDonation);
         Task<List<Donation>> GetAll();
+        Task<List<Donation>> GetAllByDonor(int idDonor);
         Task<int> Create(Donation donation);
     }
 }

@@ -1,4 +1,6 @@
 ﻿using BloodConnect.Application.Queries.GetAllDonation;
+using BloodConnect.Application.Queries.GetAllDonationsByDonor;
+using BloodConnect.Application.Queries.GetDonationById;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -21,6 +23,27 @@ namespace BloodConnect.API.Controllers
         {
             var list = await _mediator.Send(new GetAllDonationQuery());
             return Ok(list);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var query = new GetDonationByIdQuery(id);
+            var donation = await _mediator.Send(query);
+            if (donation == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(donation);
+        }
+
+        [HttpGet("donor/{id}")]
+        public async Task<IActionResult> GetAllDonationsByDonor(int id)
+        {
+            var query = new GetAllDonationsByDonorQuery(id);
+            var result = await _mediator.Send(query);
+            return Ok(result);
         }
     }
 }
