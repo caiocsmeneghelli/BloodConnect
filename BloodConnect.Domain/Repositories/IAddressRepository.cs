@@ -10,6 +10,6 @@ namespace BloodConnect.Domain.Repositories
     public interface IAddressRepository
     {
         Task<int> CreateAsync(Address address);
-        Task<int> GetByIdAsync(int id);
+        Task<Address?> GetByIdAsync(int id);
     }
 }

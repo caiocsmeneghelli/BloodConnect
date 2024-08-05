@@ -1,5 +1,8 @@
 using BloodConnect.Application.Commands.CreateDonor;
 using BloodConnect.Domain.Repositories;
+using BloodConnect.Infrastructure.Persistence;
+using BloodConnect.Infrastructure.Persistence.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,9 +13,14 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddDbContext<BloodConnectContext>(x => x.UseInMemoryDatabase("BloodConnect"));
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateDonorCommand).Assembly));
 
-//builder.Services.AddScoped<IDonorRepository, DonorRepository>();
+builder.Services.AddScoped<IDonorRepository, DonorRepository>();
+builder.Services.AddScoped<IDonationRepository, DonationRepository>();
+builder.Services.AddScoped<IBloodStockRepository, BloodStockRepository>();
+
+
 
 var app = builder.Build();
 

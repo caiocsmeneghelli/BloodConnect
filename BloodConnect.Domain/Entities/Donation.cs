@@ -8,13 +8,13 @@ namespace BloodConnect.Domain.Entities
 {
     public class Donation : BaseEntity
     {
-        public Donation(int donnorId, int quantityMl) : base()
+        public Donation(int donorId, int quantityMl) : base()
         {
-            DonnorId = donnorId;
+            DonorId = donorId;
             QuantityMl = quantityMl;
         }
 
-        public int DonnorId { get; private set; }
+        public int DonorId { get; private set; }
         public Donor Donor { get; private set; }
         public int QuantityMl { get; private set; }
     }

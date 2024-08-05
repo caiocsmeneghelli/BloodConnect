@@ -17,5 +17,6 @@ namespace BloodConnect.Domain.Entities
         public string State { get; private set; }
         public string CEP { get; private set; }
         public Donor Donor { get; private set; }
+        public int DonorId { get; private set; }
     }
 }
