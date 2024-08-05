@@ -1,4 +1,5 @@
-﻿using BloodConnect.Application.Queries.GetAllDonation;
+﻿using BloodConnect.Application.Commands.CreateDonation;
+using BloodConnect.Application.Queries.GetAllDonation;
 using BloodConnect.Application.Queries.GetAllDonationsByDonor;
 using BloodConnect.Application.Queries.GetDonationById;
 using MediatR;
@@ -44,6 +45,18 @@ namespace BloodConnect.API.Controllers
             var query = new GetAllDonationsByDonorQuery(id);
             var result = await _mediator.Send(query);
             return Ok(result);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(CreateDonationCommand command)
+        {
+            var idDonation = await _mediator.Send(command);
+            if (idDonation == 0)
+            {
+                return BadRequest("Falha ao criar doação.");
+            }
+
+            return CreatedAtAction(nameof(GetById), new { id = idDonation }, command);
         }
     }
 }
