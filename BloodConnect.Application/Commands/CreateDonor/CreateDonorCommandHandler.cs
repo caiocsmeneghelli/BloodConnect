@@ -45,11 +45,11 @@ namespace BloodConnect.Application.Commands.CreateDonor
             Donor donor = new Donor(request.FullName, request.Email, request.BirthDate.Value,
                genreEnum, request.Weight, bloodTypeEnum, rhFactorEnum);
 
-            Address address = new Address(request.Street, request.City, request.State, request.Cep);
+            //Address address = new Address(request.Street, request.City, request.State, request.Cep);
 
-            donor.AddAddress(address);
+            //donor.AddAddress(address);
 
-            await _addressRepository.CreateAsync(address);
+            //await _addressRepository.CreateAsync(address);
             await _donorRepository.CreateAsync(donor);
 
             return donor.Id;

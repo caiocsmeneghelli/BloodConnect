@@ -29,8 +29,8 @@ namespace BloodConnect.Domain.Entities
         public double Weight { get; set; }
         public BloodType BloodType { get; private set; }
         public RhFactor RhFactor { get; private set; }
-        public int AddressId { get; private set; }
-        public Address Address { get; private set; }
+        public int? AddressId { get; private set; }
+        public Address? Address { get; private set; }
         public List<Donation> Donations { get; private set; }
 
 

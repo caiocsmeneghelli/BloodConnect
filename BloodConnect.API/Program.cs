@@ -19,6 +19,7 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Creat
 builder.Services.AddScoped<IDonorRepository, DonorRepository>();
 builder.Services.AddScoped<IDonationRepository, DonationRepository>();
 builder.Services.AddScoped<IBloodStockRepository, BloodStockRepository>();
+builder.Services.AddScoped<IAddressRepository, AddressRepository>();
 
 
 
