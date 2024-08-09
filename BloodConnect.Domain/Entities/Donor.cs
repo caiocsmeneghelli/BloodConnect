@@ -36,6 +36,7 @@ namespace BloodConnect.Domain.Entities
 
         public void AddAddress(Address address)
         {
+            AddressId = address.Id;
             Address = address;
         }
     }

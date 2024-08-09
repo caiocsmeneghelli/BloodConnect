@@ -21,12 +21,15 @@ namespace BloodConnect.Infrastructure.Persistence.Repositories
         public async Task<int> CreateAsync(Donor donor)
         {
             await _context.Donors.AddAsync(donor);
+            await _context.SaveChangesAsync();
             return donor.Id;
         }
 
         public async Task<List<Donor>> GetAllAsync()
         {
-            return await _context.Donors.ToListAsync();
+            return await _context.Donors
+                .Include(d => d.Address)
+                .ToListAsync();
         }
 
         public async Task<Donor?> GetAsync(int id)

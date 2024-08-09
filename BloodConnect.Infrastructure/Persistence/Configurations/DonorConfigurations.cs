@@ -20,11 +20,7 @@ namespace BloodConnect.Infrastructure.Persistence.Configurations
                 .HasForeignKey(d => d.DonorId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasOne(d => d.Address)
-                .WithOne(a => a.Donor)
-                .HasForeignKey<Address>(a => a.DonorId)
-                .OnDelete(DeleteBehavior.Cascade);
-
+            builder.HasOne(d => d.Address);
                 
         }
     }

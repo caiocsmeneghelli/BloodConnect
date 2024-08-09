@@ -4,19 +4,17 @@ namespace BloodConnect.Domain.Entities
 {
     public class Address : BaseEntity
     {
-        public Address(string street, string city, string state, string cep) : base()
+        public Address(string street, string city, string state, string cEP)
         {
             Street = street;
             City = city;
             State = state;
-            CEP = cep;
+            CEP = cEP;
         }
 
         public string Street { get; private set; }
         public string City { get; private set; }
         public string State { get; private set; }
         public string CEP { get; private set; }
-        public Donor Donor { get; private set; }
-        public int DonorId { get; private set; }
     }
 }
