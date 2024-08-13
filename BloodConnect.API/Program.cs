@@ -1,3 +1,4 @@
+using BloodConnect.Application;
 using BloodConnect.Application.Commands.CreateDonor;
 using BloodConnect.Domain.Repositories;
 using BloodConnect.Domain.UnitOfWork;
@@ -12,6 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 // Add services to the container.
 builder.Services
+    .AddAplication()
     .AddInfrastructure();
 
 builder.Services.AddControllers();
@@ -20,7 +22,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<BloodConnectContext>(x => x.UseInMemoryDatabase("BloodConnect"));
-builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateDonorCommand).Assembly));
 
 
 var app = builder.Build();
