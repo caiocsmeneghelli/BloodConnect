@@ -1,6 +1,7 @@
 using BloodConnect.Application.Commands.CreateDonor;
 using BloodConnect.Domain.Repositories;
 using BloodConnect.Domain.UnitOfWork;
+using BloodConnect.Infrastructure;
 using BloodConnect.Infrastructure.Persistence;
 using BloodConnect.Infrastructure.Persistence.Repositories;
 using BloodConnect.Infrastructure.Persistence.UnitOfWork;
@@ -8,7 +9,10 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var configuration = builder.Configuration;
 // Add services to the container.
+builder.Services
+    .AddInfrastructure();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -17,13 +21,6 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<BloodConnectContext>(x => x.UseInMemoryDatabase("BloodConnect"));
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateDonorCommand).Assembly));
-
-builder.Services.AddScoped<IDonorRepository, DonorRepository>();
-builder.Services.AddScoped<IDonationRepository, DonationRepository>();
-builder.Services.AddScoped<IBloodStockRepository, BloodStockRepository>();
-builder.Services.AddScoped<IAddressRepository, AddressRepository>();
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-
 
 
 var app = builder.Build();
