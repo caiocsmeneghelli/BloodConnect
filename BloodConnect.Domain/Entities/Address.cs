@@ -13,7 +13,7 @@ namespace BloodConnect.Domain.Entities
             Street = street;
             City = city;
             State = state;
-            CEP = cEP;
+            CEP = cep;
         }
 
         public string Street { get; private set; }
