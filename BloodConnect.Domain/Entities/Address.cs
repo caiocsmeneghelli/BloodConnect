@@ -4,6 +4,10 @@ namespace BloodConnect.Domain.Entities
 {
     public class Address : BaseEntity
     {
+        public Address()
+        {
+            
+        }
         public Address(string street, string city, string state, string cep) : base()
         {
             Street = street;

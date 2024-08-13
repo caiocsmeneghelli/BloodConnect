@@ -1,6 +1,7 @@
 ﻿using BloodConnect.Application.Validation;
 using BloodConnect.Domain.Entities;
 using BloodConnect.Domain.Repositories;
+using BloodConnect.Domain.UnitOfWork;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -12,17 +13,11 @@ namespace BloodConnect.Application.Commands.CreateDonation
 {
     public class CreateDonationCommandHandler : IRequestHandler<CreateDonationCommand, int>
     {
-        private readonly IDonationRepository _donationRepository;
-        private readonly IBloodStockRepository _bloodStockRepository;
-        private readonly IDonorRepository _donorRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public CreateDonationCommandHandler(IDonationRepository donationRepository, 
-                                            IBloodStockRepository bloodStockRepository, 
-                                            IDonorRepository donorRepository)
+        public CreateDonationCommandHandler(IUnitOfWork unitOfWork)
         {
-            _donationRepository = donationRepository;
-            _bloodStockRepository = bloodStockRepository;
-            _donorRepository = donorRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<int> Handle(CreateDonationCommand request, CancellationToken cancellationToken)
@@ -36,8 +31,8 @@ namespace BloodConnect.Application.Commands.CreateDonation
             }
 
 
-            Donor? donor = await _donorRepository.GetAsync(request.IdDonor);
-            BloodStock? bloodStock = await _bloodStockRepository
+            Donor? donor = await _unitOfWork.Donors.GetAsync(request.IdDonor);
+            BloodStock? bloodStock = await _unitOfWork.BloodStocks
                 .GetByTypeAndRhFactorAsync(donor.BloodType, donor.RhFactor);
 
             if (bloodStock == null)
@@ -49,15 +44,19 @@ namespace BloodConnect.Application.Commands.CreateDonation
             
             Donation donation = new Donation(donor.Id, request.QuantityMl);
 
-            await _donationRepository.Create(donation);
+
+            await _unitOfWork.BeginTransactionAsync();
+            await _unitOfWork.Donations.Create(donation);
             if(bloodStock.Id == 0)
             {
-                await _bloodStockRepository.CreateBloodStock(bloodStock);
+                await _unitOfWork.BloodStocks.CreateBloodStock(bloodStock);
             }
             else
             {
-                await _bloodStockRepository.UpdateBloodStock(bloodStock);
+                await _unitOfWork.BloodStocks.UpdateBloodStock(bloodStock);
             }
+
+            await _unitOfWork.CompletAsync();
 
             return donation.Id;
         }

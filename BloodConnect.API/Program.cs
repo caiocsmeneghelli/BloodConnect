@@ -1,7 +1,9 @@
 using BloodConnect.Application.Commands.CreateDonor;
 using BloodConnect.Domain.Repositories;
+using BloodConnect.Domain.UnitOfWork;
 using BloodConnect.Infrastructure.Persistence;
 using BloodConnect.Infrastructure.Persistence.Repositories;
+using BloodConnect.Infrastructure.Persistence.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,6 +22,7 @@ builder.Services.AddScoped<IDonorRepository, DonorRepository>();
 builder.Services.AddScoped<IDonationRepository, DonationRepository>();
 builder.Services.AddScoped<IBloodStockRepository, BloodStockRepository>();
 builder.Services.AddScoped<IAddressRepository, AddressRepository>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 
 

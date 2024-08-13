@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BloodConnect.Infrastructure.Persistence.UnitOfWork
+namespace BloodConnect.Domain.UnitOfWork
 {
     public interface IUnitOfWork
     {
