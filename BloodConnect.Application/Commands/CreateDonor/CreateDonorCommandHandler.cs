@@ -2,6 +2,7 @@
 using BloodConnect.Domain.Entities;
 using BloodConnect.Domain.Enums;
 using BloodConnect.Domain.Repositories;
+using BloodConnect.Domain.UnitOfWork;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -13,14 +14,13 @@ namespace BloodConnect.Application.Commands.CreateDonor
 {
     public class CreateDonorCommandHandler : IRequestHandler<CreateDonorCommand, int>
     {
-        private readonly IDonorRepository _donorRepository;
-        private readonly IAddressRepository _addressRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public CreateDonorCommandHandler(IDonorRepository donorRepository, IAddressRepository addressRepository)
+        public CreateDonorCommandHandler(IUnitOfWork unitOfWork)
         {
-            _donorRepository = donorRepository;
-            _addressRepository = addressRepository;
+            _unitOfWork = unitOfWork;
         }
+
 
         public async Task<int> Handle(CreateDonorCommand request, CancellationToken cancellationToken)
         {
@@ -46,11 +46,15 @@ namespace BloodConnect.Application.Commands.CreateDonor
                genreEnum, request.Weight, bloodTypeEnum, rhFactorEnum);
 
             Address address = new Address(request.Street, request.City, request.State, request.Cep);
-            await _addressRepository.CreateAsync(address);
 
             donor.AddAddress(address);
 
-            await _donorRepository.CreateAsync(donor);
+            await _unitOfWork.BeginTransactionAsync();
+
+            await _unitOfWork.Addresses.CreateAsync(address);
+            await _unitOfWork.Donors.CreateAsync(donor);
+
+            await _unitOfWork.CommitAsync();
 
             return donor.Id;
         }
