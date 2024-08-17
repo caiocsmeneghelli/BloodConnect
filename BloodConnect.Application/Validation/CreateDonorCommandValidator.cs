@@ -73,18 +73,6 @@ namespace BloodConnect.Application.Validation
                     .WithMessage("Campo FatorRh inválido.");
             });
 
-            RuleFor(reg => reg.Street)
-                .NotEmpty()
-                .WithMessage("Campo Rua não pode ser vazio.");
-
-            RuleFor(reg => reg.City)
-                .NotEmpty()
-                .WithMessage("Campo Cidade não pode ser vazio.");
-
-            RuleFor(reg => reg.State)
-                .NotEmpty()
-                .WithMessage("Campo Estado não pode ser vazio.");
-
             RuleFor(reg => reg.Cep)
                 .NotEmpty()
                 .WithMessage("Campo Cep não pode ser vazio.");

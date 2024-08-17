@@ -1,7 +1,9 @@
 ﻿using BloodConnect.Domain.Repositories;
+using BloodConnect.Domain.Services;
 using BloodConnect.Domain.UnitOfWork;
 using BloodConnect.Infrastructure.Persistence.Repositories;
 using BloodConnect.Infrastructure.Persistence.UnitOfWork;
+using BloodConnect.Infrastructure.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BloodConnect.Infrastructure
@@ -22,6 +24,9 @@ namespace BloodConnect.Infrastructure
             services.AddScoped<IDonationRepository, DonationRepository>();
             services.AddScoped<IBloodStockRepository, BloodStockRepository>();
             services.AddScoped<IAddressRepository, AddressRepository>();
+
+            // FIX
+            services.AddScoped<IAddressService, AddressService>();
 
             return services;
         }

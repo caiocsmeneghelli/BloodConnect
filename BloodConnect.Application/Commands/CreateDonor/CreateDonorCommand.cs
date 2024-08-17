@@ -14,9 +14,6 @@ namespace BloodConnect.Application.Commands.CreateDonor
         public string? RhFactor { get; set; }
 
         // Address // use CEP
-        public string? Street { get; set; }
-        public string? City { get; set; }
-        public string? State { get; set; }
         public string? Cep { get; set; }
     }
 }

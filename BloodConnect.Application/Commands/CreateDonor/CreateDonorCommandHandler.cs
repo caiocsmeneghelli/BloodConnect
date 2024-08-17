@@ -2,6 +2,7 @@
 using BloodConnect.Domain.Entities;
 using BloodConnect.Domain.Enums;
 using BloodConnect.Domain.Repositories;
+using BloodConnect.Domain.Services;
 using BloodConnect.Domain.UnitOfWork;
 using MediatR;
 using System;
@@ -15,10 +16,12 @@ namespace BloodConnect.Application.Commands.CreateDonor
     public class CreateDonorCommandHandler : IRequestHandler<CreateDonorCommand, Result>
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IAddressService _addressService;
 
-        public CreateDonorCommandHandler(IUnitOfWork unitOfWork)
+        public CreateDonorCommandHandler(IUnitOfWork unitOfWork, IAddressService addressService)
         {
             _unitOfWork = unitOfWork;
+            _addressService = addressService;
         }
 
 
@@ -29,7 +32,7 @@ namespace BloodConnect.Application.Commands.CreateDonor
             var validationResult = validation.Validate(request);
             if (!validationResult.IsValid)
             {
-                return Result.Failure(request, validationResult.Errors 
+                return Result.Failure(request, validationResult.Errors
                     .Select(reg => reg.ErrorMessage).ToList());
             }
 
@@ -45,18 +48,21 @@ namespace BloodConnect.Application.Commands.CreateDonor
             Donor donor = new Donor(request.FullName, request.Email, request.BirthDate.Value,
                genreEnum, request.Weight, bloodTypeEnum, rhFactorEnum);
 
-            Address address = new Address(request.Street, request.City, request.State, request.Cep);
-
-            donor.AddAddress(address);
+            var addressDto = await _addressService.GetAddressByCEP(request.Cep);
 
             await _unitOfWork.BeginTransactionAsync();
+            if (addressDto is not null)
+            {
+                Address address = new Address(addressDto.Logradouro, addressDto.Localidade, addressDto.Uf, addressDto.Cep);
+                donor.AddAddress(address);
+                await _unitOfWork.Addresses.CreateAsync(address);
+            }
 
-            await _unitOfWork.Addresses.CreateAsync(address);
             await _unitOfWork.Donors.CreateAsync(donor);
 
             await _unitOfWork.CommitAsync();
 
-            return Result.Success(donor.Id);
+            return Result.Success(donor);
         }
     }
 }
