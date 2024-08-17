@@ -5,6 +5,7 @@ using BloodConnect.Infrastructure.Persistence.Repositories;
 using BloodConnect.Infrastructure.Persistence.UnitOfWork;
 using BloodConnect.Infrastructure.Services;
 using Microsoft.Extensions.DependencyInjection;
+using System.Runtime.CompilerServices;
 
 namespace BloodConnect.Infrastructure
 {
@@ -14,7 +15,8 @@ namespace BloodConnect.Infrastructure
         {
             services
                 .AddRepositories()
-                .AddUnitOfWork();
+                .AddUnitOfWork()
+                .AddServices();
             return services;
         }
 
@@ -25,9 +27,6 @@ namespace BloodConnect.Infrastructure
             services.AddScoped<IBloodStockRepository, BloodStockRepository>();
             services.AddScoped<IAddressRepository, AddressRepository>();
 
-            // FIX
-            services.AddScoped<IAddressService, AddressService>();
-
             return services;
         }
 
@@ -35,6 +34,12 @@ namespace BloodConnect.Infrastructure
         {
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+            return services;
+        }
+
+        private static IServiceCollection AddServices(this IServiceCollection services)
+        {
+            services.AddScoped<IAddressService, AddressService>();
             return services;
         }
     }
