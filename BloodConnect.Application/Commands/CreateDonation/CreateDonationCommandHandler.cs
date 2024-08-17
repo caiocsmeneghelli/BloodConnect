@@ -24,8 +24,8 @@ namespace BloodConnect.Application.Commands.CreateDonation
 
         public async Task<Result> Handle(CreateDonationCommand request, CancellationToken cancellationToken)
         {
-            var validator = new CreateDonationCommandValidator();
-            var validationResult = validator.Validate(request);
+            var validator = new CreateDonationCommandValidator(_unitOfWork);
+            var validationResult = await validator.ValidateAsync(request);
             if (!validationResult.IsValid)
             {
                 return Result.Failure(request, validationResult.Errors
@@ -37,28 +37,19 @@ namespace BloodConnect.Application.Commands.CreateDonation
             BloodStock? bloodStock = await _unitOfWork.BloodStocks
                 .GetByTypeAndRhFactorAsync(donor.BloodType, donor.RhFactor);
 
+            Donation donation = new Donation(donor, request.QuantityMl);
+
+            await _unitOfWork.BeginTransactionAsync();
+            await _unitOfWork.Donations.Create(donation);
             if (bloodStock == null)
             {
                 bloodStock = new BloodStock(donor.BloodType, donor.RhFactor);
+                await _unitOfWork.BloodStocks.CreateBloodStock(bloodStock);
             }
 
             bloodStock.AddMl(request.QuantityMl);
             
-            Donation donation = new Donation(donor.Id, request.QuantityMl);
-
-
-            await _unitOfWork.BeginTransactionAsync();
-            await _unitOfWork.Donations.Create(donation);
-            if(bloodStock.Id == 0)
-            {
-                await _unitOfWork.BloodStocks.CreateBloodStock(bloodStock);
-            }
-            else
-            {
-                await _unitOfWork.BloodStocks.UpdateBloodStock(bloodStock);
-            }
-
-            await _unitOfWork.CompletAsync();
+            await _unitOfWork.CommitAsync();
 
             return Result.Success(donation.Id);
         }

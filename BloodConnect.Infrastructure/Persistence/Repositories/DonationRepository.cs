@@ -16,7 +16,7 @@ namespace BloodConnect.Infrastructure.Persistence.Repositories
         public async Task<int> Create(Donation donation)
         {
             await _context.Donations.AddAsync(donation);
-            await _context.SaveChangesAsync();
+            //await _context.SaveChangesAsync();
             return donation.Id;
         }
 

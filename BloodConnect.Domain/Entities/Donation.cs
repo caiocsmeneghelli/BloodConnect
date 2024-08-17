@@ -14,6 +14,12 @@ namespace BloodConnect.Domain.Entities
             QuantityMl = quantityMl;
         }
 
+        public Donation(Donor donor, int quantityMl) : base()
+        {
+            Donor = donor;
+            QuantityMl = quantityMl;
+        }
+
         public int DonorId { get; private set; }
         public Donor Donor { get; private set; }
         public int QuantityMl { get; private set; }

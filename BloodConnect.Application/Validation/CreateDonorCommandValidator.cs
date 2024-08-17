@@ -38,12 +38,6 @@ namespace BloodConnect.Application.Validation
             RuleFor(reg => reg.BirthDate)
                 .NotEmpty()
                 .WithMessage("Campo Data de Nascimento não pode ser vazio.");
-            When(reg => reg.BirthDate != null, () =>
-            {
-                RuleFor(reg => reg.BirthDate)
-                    .Must(ValidateBirthdate)
-                    .WithMessage("O doador precisa ter mais de 18 anos.");
-            });
 
             RuleFor(reg => reg.Genre)
                 .NotEmpty()
@@ -82,26 +76,6 @@ namespace BloodConnect.Application.Validation
 
         }
 
-        private bool ValidateBirthdate(DateTime? birthDate)
-        {
-            DateTime birthDateLegal = DateTime.Now.AddYears(-18);
-            return birthDate < birthDateLegal;
-        }
-
-        private bool ValidateEnumGenre(string emumGenre)
-        {
-            return Enum.TryParse<Genre>(emumGenre, out var genreEnum);
-        }
-
-        private bool ValidateEnumBloodType(string emumBloodType)
-        {
-            return Enum.TryParse<BloodType>(emumBloodType, out var bloodTypeEnum);
-        }
-
-        private bool ValidateEnumRhFactor(string emumRhFactor)
-        {
-            return Enum.TryParse<RhFactor>(emumRhFactor, out var rhFactorEnum);
-        }
 
         private bool ValidateCep(string cep)
         { 

@@ -23,7 +23,6 @@ namespace BloodConnect.Infrastructure.Persistence.Repositories
         {
             await _context.BloodStocks.AddAsync(bloodStock);
             return bloodStock.Id;
-            await _context.SaveChangesAsync();
         }
 
         public async Task<List<BloodStock>> GetAllAsync()
@@ -42,11 +41,6 @@ namespace BloodConnect.Infrastructure.Persistence.Repositories
                 .Where(d => d.BloodType == type)
                 .Where(d => d.RhFactor == rhFactor)
                 .SingleOrDefaultAsync();
-        }
-
-        public async Task UpdateBloodStock(BloodStock bloodStock)
-        {
-            await _context.SaveChangesAsync();
         }
     }
 }
