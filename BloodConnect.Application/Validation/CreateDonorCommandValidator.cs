@@ -47,37 +47,27 @@ namespace BloodConnect.Application.Validation
 
             RuleFor(reg => reg.Genre)
                 .NotEmpty()
-                .WithMessage("Campo Genero não pode ser vazio.");
-            When(reg => reg.Genre != null, () =>
-            {
-                RuleFor(reg => reg.Genre)
-                    .Must(ValidateEnumGenre)
-                    .WithMessage("Campo Genero inválido.");
-            });
+                .WithMessage("Campo Genero não pode ser vazio.")
+                .IsInEnum()
+                .WithMessage("Campo Genero inválido.");
 
             RuleFor(reg => reg.Weight)
                 .GreaterThanOrEqualTo(50)
                 .WithMessage("O peso deve ser de no mínimo 50 kilos.");
+                
 
             RuleFor(reg => reg.BloodType)
                 .NotEmpty()
-                .WithMessage("Campo Tipo Sanguineo não pode ser vazio.");
-            When(reg => reg.BloodType != null, () =>
-            {
-                RuleFor(reg => reg.BloodType)
-                    .Must(ValidateEnumBloodType)
-                    .WithMessage("Campo Tipo Sanguineo inválido.");
-            });
+                .WithMessage("Campo Tipo Sanguineo não pode ser vazio.")
+                .IsInEnum()
+                .WithMessage("Campo Tipo Sanguineo inválido.");
 
             RuleFor(reg => reg.RhFactor)
                 .NotEmpty()
-                .WithMessage("Campo FatorRh não pode ser vazio.");
-            When(reg => reg.RhFactor != null, () =>
-            {
-                RuleFor(reg => reg.RhFactor)
-                    .Must(ValidateEnumRhFactor)
-                    .WithMessage("Campo FatorRh inválido.");
-            });
+                .WithMessage("Campo FatorRh não pode ser vazio.")
+                .IsInEnum()
+                .WithMessage("Campo FatorRh inválido.");
+            
 
             RuleFor(reg => reg.Cep)
                 .NotEmpty()

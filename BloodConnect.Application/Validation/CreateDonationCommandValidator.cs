@@ -15,8 +15,11 @@ namespace BloodConnect.Application.Validation
             RuleFor(reg => reg.IdDonor)
                 .NotEmpty()
                 .WithMessage("O campo Id do doador não pode ser vazio.");
-            RuleFor(reg => reg.QuantityMl).GreaterThan(0)
-                .WithMessage("A quantidade de sangue doado deve ser maior que zero.");
+
+            RuleFor(reg => reg.QuantityMl)
+                .GreaterThanOrEqualTo(420)
+                .LessThanOrEqualTo(470)
+                .WithMessage("A quantidade de sangue doado deve ser maior que 420ml e menor que 470ml.");
         }
     }
 }

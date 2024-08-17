@@ -36,17 +36,8 @@ namespace BloodConnect.Application.Commands.CreateDonor
                     .Select(reg => reg.ErrorMessage).ToList());
             }
 
-
-            Genre genreEnum;
-            BloodType bloodTypeEnum;
-            RhFactor rhFactorEnum;
-
-            Enum.TryParse<Genre>(request.Genre, out genreEnum);
-            Enum.TryParse<BloodType>(request.BloodType, out bloodTypeEnum);
-            Enum.TryParse<RhFactor>(request.RhFactor, out rhFactorEnum);
-
             Donor donor = new Donor(request.FullName, request.Email, request.BirthDate.Value,
-               genreEnum, request.Weight, bloodTypeEnum, rhFactorEnum);
+               request.Genre, request.Weight, request.BloodType, request.RhFactor);
 
             var addressDto = await _addressService.GetAddressByCEP(request.Cep);
 
