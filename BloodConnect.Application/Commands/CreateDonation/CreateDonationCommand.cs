@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BloodConnect.Application.Commands.CreateDonation
 {
-    public class CreateDonationCommand : IRequest<int>
+    public class CreateDonationCommand : IRequest<Result>
     {
         public int IdDonor { get; set; }
         public int QuantityMl { get; set; }

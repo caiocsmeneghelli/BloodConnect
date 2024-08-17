@@ -2,16 +2,18 @@
 using BloodConnect.Domain.Entities;
 using BloodConnect.Domain.Repositories;
 using BloodConnect.Domain.UnitOfWork;
+using FluentValidation.Results;
 using MediatR;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace BloodConnect.Application.Commands.CreateDonation
 {
-    public class CreateDonationCommandHandler : IRequestHandler<CreateDonationCommand, int>
+    public class CreateDonationCommandHandler : IRequestHandler<CreateDonationCommand, Result>
     {
         private readonly IUnitOfWork _unitOfWork;
 
@@ -20,14 +22,14 @@ namespace BloodConnect.Application.Commands.CreateDonation
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<int> Handle(CreateDonationCommand request, CancellationToken cancellationToken)
+        public async Task<Result> Handle(CreateDonationCommand request, CancellationToken cancellationToken)
         {
             var validator = new CreateDonationCommandValidator();
-            var validatorResult = validator.Validate(request);
-            if (!validatorResult.IsValid)
+            var validationResult = validator.Validate(request);
+            if (!validationResult.IsValid)
             {
-                List<string> errors = validatorResult.Errors.Select(reg => reg.ErrorMessage).ToList();
-                throw new Exception(errors.ToString());
+                return Result.Failure(request, validationResult.Errors
+                    .Select(reg => reg.ErrorMessage).ToList());
             }
 
 
@@ -58,7 +60,7 @@ namespace BloodConnect.Application.Commands.CreateDonation
 
             await _unitOfWork.CompletAsync();
 
-            return donation.Id;
+            return Result.Success(donation.Id);
         }
     }
 }

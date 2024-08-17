@@ -21,7 +21,10 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext<BloodConnectContext>(x => x.UseInMemoryDatabase("BloodConnect"));
+//builder.Services.AddDbContext<BloodConnectContext>(x => x.UseInMemoryDatabase("BloodConnect"));
+var connectionString = builder.Configuration.GetConnectionString("DbContextCs");
+var serverVersion = ServerVersion.AutoDetect(connectionString);
+builder.Services.AddDbContext<BloodConnectContext>(options => options.UseMySql(connectionString, serverVersion));
 
 
 var app = builder.Build();

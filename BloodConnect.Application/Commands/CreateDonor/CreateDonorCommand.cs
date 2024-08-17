@@ -3,7 +3,7 @@ using MediatR;
 
 namespace BloodConnect.Application.Commands.CreateDonor
 {
-    public class CreateDonorCommand : IRequest<int>
+    public class CreateDonorCommand : IRequest<Result>
     {
         public string? FullName { get; set; }
         public string? Email { get; set; }

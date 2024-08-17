@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace BloodConnect.Application.Commands.CreateDonor
 {
-    public class CreateDonorCommandHandler : IRequestHandler<CreateDonorCommand, int>
+    public class CreateDonorCommandHandler : IRequestHandler<CreateDonorCommand, Result>
     {
         private readonly IUnitOfWork _unitOfWork;
 
@@ -22,15 +22,15 @@ namespace BloodConnect.Application.Commands.CreateDonor
         }
 
 
-        public async Task<int> Handle(CreateDonorCommand request, CancellationToken cancellationToken)
+        public async Task<Result> Handle(CreateDonorCommand request, CancellationToken cancellationToken)
         {
             // Validate Command
             var validation = new CreateDonorCommandValidator();
             var validationResult = validation.Validate(request);
             if (!validationResult.IsValid)
             {
-                List<string> errors = validationResult.Errors.Select(reg => reg.ErrorMessage).ToList();
-                throw new Exception("Falha completa.");
+                return Result.Failure(request, validationResult.Errors 
+                    .Select(reg => reg.ErrorMessage).ToList());
             }
 
 
@@ -56,7 +56,7 @@ namespace BloodConnect.Application.Commands.CreateDonor
 
             await _unitOfWork.CommitAsync();
 
-            return donor.Id;
+            return Result.Success(donor.Id);
         }
     }
 }
