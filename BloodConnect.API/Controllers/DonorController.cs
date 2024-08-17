@@ -40,10 +40,10 @@ namespace BloodConnect.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CreateDonorCommand command)
         {
-            int idDonor = await _mediatr.Send(command);
-            if(idDonor == 0) { BadRequest("Doador não encontrado."); }
+            var result = await _mediatr.Send(command);
+            if(!result.IsSuccess) { BadRequest(result.Errors); }
 
-            return Ok(idDonor);
+            return Ok(result.Value);
         }
     }
 }

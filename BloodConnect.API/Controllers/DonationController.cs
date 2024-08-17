@@ -50,13 +50,13 @@ namespace BloodConnect.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CreateDonationCommand command)
         {
-            var idDonation = await _mediator.Send(command);
-            if (idDonation == 0)
+            var result = await _mediator.Send(command);
+            if (!result.IsSuccess)
             {
-                return BadRequest("Falha ao criar doação.");
+                return BadRequest(result.Errors);
             }
 
-            return CreatedAtAction(nameof(GetById), new { id = idDonation }, command);
+            return CreatedAtAction(nameof(GetById), new { id = result.Value }, command);
         }
     }
 }
