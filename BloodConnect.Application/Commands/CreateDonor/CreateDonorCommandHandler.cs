@@ -28,8 +28,8 @@ namespace BloodConnect.Application.Commands.CreateDonor
         public async Task<Result> Handle(CreateDonorCommand request, CancellationToken cancellationToken)
         {
             // Validate Command
-            var validation = new CreateDonorCommandValidator();
-            var validationResult = validation.Validate(request);
+            var validation = new CreateDonorCommandValidator(_unitOfWork);
+            var validationResult = await validation.ValidateAsync(request);
             if (!validationResult.IsValid)
             {
                 return Result.Failure(request, validationResult.Errors

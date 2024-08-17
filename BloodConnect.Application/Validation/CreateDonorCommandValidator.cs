@@ -1,5 +1,6 @@
 ﻿using BloodConnect.Application.Commands.CreateDonor;
 using BloodConnect.Domain.Enums;
+using BloodConnect.Domain.UnitOfWork;
 using FluentValidation;
 using MediatR;
 using System;
@@ -13,8 +14,11 @@ namespace BloodConnect.Application.Validation
 {
     public class CreateDonorCommandValidator : AbstractValidator<CreateDonorCommand>
     {
-        public CreateDonorCommandValidator()
+        private readonly IUnitOfWork _unitOfWork;
+
+        public CreateDonorCommandValidator(IUnitOfWork unitOfWork)
         {
+            _unitOfWork = unitOfWork;
             RuleFor(reg => reg.FullName)
                 .NotEmpty()
                 .WithMessage("Campo Nome Completo não pode ser vazio.");
@@ -26,7 +30,9 @@ namespace BloodConnect.Application.Validation
             {
                 RuleFor(reg => reg.Email)
                     .EmailAddress()
-                    .WithMessage("E-mail informado não válido.");
+                    .WithMessage("E-mail informado não válido.")
+                    .MustAsync(ValidateEmailDuplicate)
+                    .WithMessage("E-mail já cadastrado.");
             });
 
             RuleFor(reg => reg.BirthDate)
@@ -86,13 +92,6 @@ namespace BloodConnect.Application.Validation
 
         }
 
-        private bool ValidateEmail(string email)
-        {
-            string regex = @"^[^@\s]+@[^@\s]+\.(com|net|org|gov)$";
-
-            return Regex.IsMatch(email, regex, RegexOptions.IgnoreCase);
-        }
-
         private bool ValidateBirthdate(DateTime? birthDate)
         {
             DateTime birthDateLegal = DateTime.Now.AddYears(-18);
@@ -118,6 +117,11 @@ namespace BloodConnect.Application.Validation
         { 
             string cepNumeros = Regex.Replace(cep, @"[^\d]", "");
             return cepNumeros.Length == 8;
+        }
+
+        private async Task<bool> ValidateEmailDuplicate(string email, CancellationToken cancellationToken) {
+            var donor = await _unitOfWork.Donors.GetEmailAsync(email);
+            return donor == null ? true : false;
         }
     }
 }

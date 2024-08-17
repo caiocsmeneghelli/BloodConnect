@@ -41,7 +41,7 @@ namespace BloodConnect.API.Controllers
         public async Task<IActionResult> Create(CreateDonorCommand command)
         {
             var result = await _mediatr.Send(command);
-            if(result.IsSuccess == false) { BadRequest(result.Errors); }
+            if(result.IsSuccess == false) { return BadRequest(result.Errors); }
 
             return Ok(result.Value);
         }

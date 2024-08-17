@@ -36,5 +36,12 @@ namespace BloodConnect.Infrastructure.Persistence.Repositories
         {
             return await _context.Donors.SingleOrDefaultAsync(d => d.Id == id);
         }
+
+        public async Task<Donor?> GetEmailAsync(string email)
+        {
+            return await _context
+                .Donors
+                .SingleOrDefaultAsync(d => d.Email.Equals(email));
+        }
     }
 }
