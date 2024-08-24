@@ -41,14 +41,17 @@ namespace BloodConnect.Application.Commands.CreateDonation
 
             await _unitOfWork.BeginTransactionAsync();
             await _unitOfWork.Donations.Create(donation);
+            await _unitOfWork.CompletAsync();
             if (bloodStock == null)
             {
                 bloodStock = new BloodStock(donor.BloodType, donor.RhFactor);
                 await _unitOfWork.BloodStocks.CreateBloodStock(bloodStock);
+                await _unitOfWork.CompletAsync();
             }
 
             bloodStock.AddMl(request.QuantityMl);
-            
+            await _unitOfWork.CompletAsync();
+
             await _unitOfWork.CommitAsync();
 
             return Result.Success(donation.Id);
