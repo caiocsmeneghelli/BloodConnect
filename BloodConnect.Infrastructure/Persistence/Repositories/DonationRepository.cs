@@ -41,7 +41,7 @@ namespace BloodConnect.Infrastructure.Persistence.Repositories
         {
             return await _context.Donations
                 .OrderByDescending(d => d.CreatedAt)
-                .FirstOrDefault(d => d.DonorId == idDonor);
+                .FirstOrDefaultAsync(d => d.DonorId == idDonor);
         }
     }
 }
