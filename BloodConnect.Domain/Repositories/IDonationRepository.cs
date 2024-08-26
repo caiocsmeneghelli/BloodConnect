@@ -10,6 +10,7 @@ namespace BloodConnect.Domain.Repositories
     public interface IDonationRepository
     {
         Task<Donation?> GetByIdAsync(int idDonation);
+        Task<Donation?> GetLastDonationByDonorAsync(int idDonor);
         Task<List<Donation>> GetAll();
         Task<List<Donation>> GetAllByDonor(int idDonor);
         Task<int> Create(Donation donation);

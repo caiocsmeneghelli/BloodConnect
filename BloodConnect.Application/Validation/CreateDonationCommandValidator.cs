@@ -28,16 +28,31 @@ namespace BloodConnect.Application.Validation
                 .MustAsync(ValidateBirthDonor)
                 .WithMessage("Doador precisa ser maior de idade");
 
-
+            RuleFor(reg => reg)
+                .MustAsync(ValidateFrequencyOfDonation)
+                .WithMessage("Doações feitas por homens devem ser feitas de 60 em 60 dias e de mulheres de 90 em 90 dias");
         }
 
         private async Task<bool> ValidateBirthDonor(CreateDonationCommand command, CancellationToken cancellationToken)
         {
             var donor = await _unitOfWork.Donors.GetAsync(command.IdDonor);
             if (donor == null) { return true; }
+            
 
             DateTime birthDateLegal = DateTime.Now.AddYears(-18);
             return donor.BirthDate < birthDateLegal;
+        }
+
+        private async Task<bool> ValidateFrequencyOfDonation(CreateDonationCommand command, CancellationToken cancellationToken){
+            var donor = await _unitOfWork.Donors.GetAsync(command.IdDonor);
+            var lastDonation = await _unitOfWork.Donations.GetLastDonationByDonorAsync(command.IdDonor);
+            if (donor is null || lastDonation is null) { return true; }
+            
+            if(donor.Genre == Domain.Enums.Genre.Male){
+                return DateTime.Now >= lastDonation.CreatedAt.AddDays(60);
+            }
+
+            return DateTime.Now >= lastDonation.CreatedAt.AddDays(90);
         }
     }
 }

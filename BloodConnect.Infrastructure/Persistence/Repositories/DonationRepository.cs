@@ -36,5 +36,12 @@ namespace BloodConnect.Infrastructure.Persistence.Repositories
         {
             return await _context.Donations.SingleOrDefaultAsync(d => d.Id == idDonation);
         }
+
+        public async Task<Donation?> GetLastDonationByDonorAsync(int idDonor)
+        {
+            return await _context.Donations
+                .OrderByDescending(d => d.CreatedAt)
+                .FirstOrDefault(d => d.DonorId == idDonor);
+        }
     }
 }
