@@ -1,4 +1,5 @@
-﻿using BloodConnect.Application.Queries.GetAllBloodStock;
+﻿using BloodConnect.Application.Commands.WithdrawBlood;
+using BloodConnect.Application.Queries.GetAllBloodStock;
 using BloodConnect.Application.Queries.GetBloodStockPerBloodTypeRhFactor;
 using BloodConnect.Domain.Enums;
 using MediatR;
@@ -39,6 +40,13 @@ namespace BloodConnect.API.Controllers
                 return NotFound();
             
             return Ok(result);
+        }
+
+        [HttpPut("withdraw/{idBloodStock}")]
+        public async Task<IActionResult> Withdraw(WithdrawBloodCommand command)
+        {
+            await _mediatr.Send(command);
+            return Ok();
         }
     }
 }
