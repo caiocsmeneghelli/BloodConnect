@@ -12,8 +12,6 @@ namespace BloodConnect.Application.Commands.CreateDonor
         public double Weight { get; set; }
         public BloodType BloodType { get; set; }
         public RhFactor RhFactor { get; set; }
-
-        // Address // use CEP
         public string? Cep { get; set; }
     }
 }

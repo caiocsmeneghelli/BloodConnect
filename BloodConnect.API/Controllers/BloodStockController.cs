@@ -36,17 +36,21 @@ namespace BloodConnect.API.Controllers
             var query = new GetBloodStockPerBloodTypeRhFactorQuery(bloodType, rhFactor);
             var result = await _mediatr.Send(query);
 
-            if(result is null)
+            if (result is null)
                 return NotFound();
-            
+
             return Ok(result);
         }
 
         [HttpPut("withdraw/{idBloodStock}")]
         public async Task<IActionResult> Withdraw(WithdrawBloodCommand command)
         {
-            await _mediatr.Send(command);
-            return Ok();
+            var result = await _mediatr.Send(command);
+            if (!result.IsSuccess)
+            {
+                return BadRequest(result.Errors);
+            }
+            return Ok(result);
         }
     }
 }

@@ -21,7 +21,12 @@ namespace BloodConnect.Domain.Entities
 
         public void AddMl(int quantityMl)
         {
-            QuantityMl = QuantityMl + quantityMl;
+            QuantityMl = +quantityMl;
+        }
+
+        public void Withdraw(int quantityMl)
+        {
+            QuantityMl = -quantityMl;
         }
     }
 }
